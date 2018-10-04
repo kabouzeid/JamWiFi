@@ -24,6 +24,8 @@
     NSScrollView * clientsScrollView;
     
     NSButton * backButton;
+    NSButton * deselectAllButton;
+    NSButton * selectAllButton;
     NSButton * continueButton;
 }
 
@@ -34,6 +36,8 @@
 - (void)hopChannel;
 
 - (void)backButton:(id)sender;
+- (void)selectAllButton:(id)sender;
+- (void)deselectAllButton:(id)sender;
 - (void)continueButton:(id)sender;
 
 @end

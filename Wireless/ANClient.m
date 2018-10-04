@@ -24,7 +24,7 @@
         packetCount = 0;
         memcpy(macAddress, mac, 6);
         memcpy(bssid, aBSSID, 6);
-        enabled = YES;
+        enabled = NO;
     }
     return self;
 }

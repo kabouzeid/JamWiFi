@@ -42,6 +42,8 @@
     clientsScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 52, frame.size.width - 20, frame.size.height - 62)];
     clientsTable = [[NSTableView alloc] initWithFrame:[[clientsScrollView contentView] bounds]];
     backButton = [[NSButton alloc] initWithFrame:NSMakeRect(10, 10, 100, 24)];
+    deselectAllButton = [[NSButton alloc] initWithFrame:NSMakeRect(110, 10, 100, 24)];
+    selectAllButton = [[NSButton alloc] initWithFrame:NSMakeRect(210, 10, 100, 24)];
     continueButton = [[NSButton alloc] initWithFrame:NSMakeRect(frame.size.width - 110, 10, 100, 24)];
         
     [backButton setBezelStyle:NSRoundedBezelStyle];
@@ -49,6 +51,18 @@
     [backButton setFont:[NSFont systemFontOfSize:13]];
     [backButton setTarget:self];
     [backButton setAction:@selector(backButton:)];
+    
+    [selectAllButton setBezelStyle:NSRoundedBezelStyle];
+    [selectAllButton setTitle:@"Select All"];
+    [selectAllButton setFont:[NSFont systemFontOfSize:13]];
+    [selectAllButton setTarget:self];
+    [selectAllButton setAction:@selector(selectAllButton:)];
+    
+    [deselectAllButton setBezelStyle:NSRoundedBezelStyle];
+    [deselectAllButton setTitle:@"Deselect All"];
+    [deselectAllButton setFont:[NSFont systemFontOfSize:13]];
+    [deselectAllButton setTarget:self];
+    [deselectAllButton setAction:@selector(deselectAllButton:)];
     
     [continueButton setBezelStyle:NSRoundedBezelStyle];
     [continueButton setTitle:@"Do It!"];
@@ -98,6 +112,8 @@
     
     [self addSubview:clientsScrollView];
     [self addSubview:continueButton];
+    [self addSubview:selectAllButton];
+    [self addSubview:deselectAllButton];
     [self addSubview:backButton];
     
     [self setAutoresizesSubviews:YES];
@@ -111,6 +127,20 @@
     [sniffer setDelegate:nil];
     sniffer = nil;
     [(ANAppDelegate *)[NSApp delegate] showNetworkList];
+}
+
+- (void)deselectAllButton:(id)sender {
+    for (ANClient *client in allClients) {
+        client.enabled = NO;
+    }
+    [clientsTable reloadData];
+}
+
+- (void)selectAllButton:(id)sender {
+    for (ANClient *client in allClients) {
+        client.enabled = YES;
+    }
+    [clientsTable reloadData];
 }
 
 - (void)continueButton:(id)sender {
@@ -214,6 +244,7 @@
     if (client[0] == 0xFF && client[1] == 0xFF) hasClient = NO;
     if (hasClient) {
         ANClient * clientObj = [[ANClient alloc] initWithMac:client bssid:bssid];
+        clientObj.enabled = YES;
         if (![allClients containsObject:clientObj]) {
             [allClients addObject:clientObj];
         } else {
